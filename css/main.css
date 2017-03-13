@@ -4,7 +4,9 @@
    Author's custom styles
    ========================================================================== */
 
-
+#output, .custom-search {
+    margin: 50px;
+}
 
 
 
