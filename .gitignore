@@ -44,18 +44,4 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-.gitignore
 .idea/
-404.html
-REAME.md
-apple-touch-icon.png
-browserconfig.xml
-css/
-favicon.ico
-fonts/
-humans.txt
-img/
-index.html
-js/
-tile-wide.png
-tile.png
