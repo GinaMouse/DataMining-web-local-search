@@ -74,6 +74,7 @@
 <script>
 
     var lyricsIndex; // The index to be used by lunr
+    var store = {};
 
     require(['../node_modules/lunr/lunr.js'], function(lunr) {
         createIndex();
@@ -87,7 +88,8 @@
                 this.field('Year');
                 this.field('Lyrics');
                 this.field('Source');
-                this.ref('url');
+                this.ref('Rank');
+                this.ref('Lyrics');
             });
         }
 
@@ -103,14 +105,21 @@
                 'Lyrics': data[i].FIELD5,
                 'Source': data[i].FIELD6
                 };
-
                 lyricsIndex.add(doc, true);
             }
             console.log('outside', lyricsIndex);
+            var results = lyricsIndex.search("love is a battlefield");
 
-            console.log(lyricsIndex.search('love'));
+            if (results.length == 0) {
+                console.log("No results found.");
+            } else {
+                for (var i = 0; i < results.length; i++) {
+                    console.log(results[i]);
+                }
+            }
+
+            console.log(results.length);
         });
-
 
     });
 </script>
