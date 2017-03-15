@@ -62,19 +62,53 @@
     </div>
 </div>
 
-<form class="custom-search" action="/search.html" method="get">
-    <label for="search_box">Search</label>
-    <input type="text" id="search_box" name="query">
-    <input type="submit" value="search">
-</form>
+<div class="custom-search">
+    <input type="text" title="searchTerm"
+           id="searchTerm" placeholder="Search...">
+    <button id="search" class="btn btn-primary"
+            onclick="searchIndex()">submit
+    </button>
+</div>
 
 
 <div id="output">
-    GONNA BE LOCAL STUFF
 </div>
+
+
+<script>
+    function searchIndex() {
+        var element = document.getElementById("searchTerm");
+        var searchTerm = element.value;
+
+        if (searchTerm != '') {
+            element.value = '';
+            var results = index.search(searchTerm);
+            var output = document.getElementById("output");
+
+
+            if (results.length == 0) {
+                output.innerHTML = "<b>No results found...</b>";
+            } else {
+                output.innerHTML = "";
+                for (var j = 0; j < results.length; j++) {
+                    if (j < 10) {
+                        output.innerHTML +=
+                            "<b>Song Title:</b> " + store[results[j].ref].Song +
+                            "<br><b>Rank:</b> " + store[results[j].ref].Rank +
+                            "<br><b>Year:</b> " + store[results[j].ref].Year +
+                            "<br><b>Artist:</b> " +
+                            store[results[j].ref].Artist +
+                            "<br><br>";
+                    }
+                }
+            }
+        }
+    }
+</script>
 
 <script>
 
+    // LOAD INDEX
     var index, store;
 
     require(['../node_modules/lunr/lunr.js'], function(lunr) {
@@ -83,81 +117,12 @@
         function loadIndex() {
             $.getJSON('../json/lyricsIndex.json', function (response) {
 
-
-               console.log(typeof response);
-               console.log(response.version);
-
-                // Create index
-                index = lunr.Index.load(response);
-//                 Create store
-                store = response.documentStore;
-
-                console.log(index);
-                console.log(store);
+//                 Create index
+                index = lunr.Index.load(response.index);
+                // Create store
+                store = response.store;
             });
         }
-
-//        createIndex();
-
-        // Create the index with desired fields
-//        function createIndex() {
-//            lyricsIndex = lunr(function () {
-//                this.ref('Rank');
-//
-//                this.field('Song', { boost: 10 });
-//                this.field('Artist', { boost: 10 });
-//                this.field('Year');
-//                this.field('Lyrics', { boost: 5 });
-//            });
-//        }
-
-//        $.getJSON('../json/lyrics.json', function (data) {
-//
-//            for (var i = 1; i < data.length; i++) {
-//
-//                var doc = {
-//                'Rank': data[i].FIELD1,
-//                'Song': data[i].FIELD2,
-//                'Artist': data[i].FIELD3,
-//                'Year': data[i].FIELD4,
-//                'Lyrics': data[i].FIELD5
-//                };
-//
-//                store[doc.Rank] = {
-//                    'Rank': doc.Rank
-//                };
-//
-//                lyricsIndex.add(doc, true);
-//            }
-//            console.log(lyricsIndex);
-//            console.log(typeof lyricsIndex);
-//
-//            var arr = JSON.stringify(lyricsIndex);
-//            console.log(typeof arr);
-//
-//            var blob = new Blob([arr], {type: "json"});
-//            saveAs(blob, "lyricsIndex.json");
-//
-//            var results = lyricsIndex.search("love is a battlefield");
-//
-//            console.log(results);
-//
-//            if (results.length == 0) {
-//                console.log("No results found.");
-//            } else {
-//                for (var j = 0; j < results.length; j++) {
-//                    document.getElementById("output").innerHTML += "<br>" +
-//                        "<b> Rank: " + results[j].ref +
-//                        store[results[j].ref].Song +
-//                    "</b><br>" +
-//                        "<br><br>";
-//
-//
-//                }
-//            }
-//
-//        });
-
     });
 </script>
 
