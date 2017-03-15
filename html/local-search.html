@@ -24,10 +24,6 @@
     <script data-main="../node_modules/requirejs/config.js"
             src="../node_modules/requirejs/require.js"></script>
 
-
-
-    <!--<script src="../node_modules/file-system/file-system.js"></script>-->
-    <!--<script src="../node_modules/lunr/lunr.min.js"></script>-->
     <script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 <body>
@@ -77,20 +73,14 @@
 
 <script>
 
-    var index;
-
-    require(['../node_modules/file-system/file-system.js'], function(fs) {
-    });
+    var lyricsIndex; // The index to be used by lunr
 
     require(['../node_modules/lunr/lunr.js'], function(lunr) {
         createIndex();
 
+        // Create the index with desired fields
         function createIndex() {
-            console.log(lunr);
-
-            index = lunr(function () {
-                console.log('test');
-
+            lyricsIndex = lunr(function () {
                 this.field('Rank');
                 this.field('Song');
                 this.field('Artist');
@@ -101,9 +91,28 @@
             });
         }
 
-        console.log(index);
-    });
+        $.getJSON('../json/lyrics.json', function (data) {
 
+            for (var i = 1; i < data.length; i++) {
+
+                var doc = {
+                'Rank': data[i].FIELD1,
+                'Song': data[i].FIELD2,
+                'Artist': data[i].FIELD3,
+                'Year': data[i].FIELD4,
+                'Lyrics': data[i].FIELD5,
+                'Source': data[i].FIELD6
+                };
+
+                lyricsIndex.add(doc, true);
+            }
+            console.log('outside', lyricsIndex);
+
+            console.log(lyricsIndex.search('love'));
+        });
+
+
+    });
 </script>
 
 
