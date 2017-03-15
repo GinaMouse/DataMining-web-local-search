@@ -21,6 +21,13 @@
     <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../css/main.css">
 
+    <script data-main="../node_modules/requirejs/config.js"
+            src="../node_modules/requirejs/require.js"></script>
+
+
+
+    <!--<script src="../node_modules/file-system/file-system.js"></script>-->
+    <!--<script src="../node_modules/lunr/lunr.min.js"></script>-->
     <script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 <body>
@@ -57,28 +64,48 @@
     </div>
 </div>
 
-<div class="custom-search">
-    <input title="searchTerm" type="text" id="searchTerm">
-    <button id="search" class="btn btn-primary" onclick="searchLocal()">submit
-    </button>
-</div>
+<form class="custom-search" action="/search.html" method="get">
+    <label for="search_box">Search</label>
+    <input type="text" id="search_box" name="query">
+    <input type="submit" value="search">
+</form>
+
 
 <div id="output">
+    GONNA BE LOCAL STUFF
 </div>
 
 <script>
-    function searchGoogle() {
-        var element = document.getElementById("searchTerm");
-        var searchTerm = element.value;
 
-        if (searchTerm != '') {
-            console.log(searchTerm);
-            element.value = '';
+    var index;
 
+    require(['../node_modules/file-system/file-system.js'], function(fs) {
+    });
+
+    require(['../node_modules/lunr/lunr.js'], function(lunr) {
+        createIndex();
+
+        function createIndex() {
+            console.log(lunr);
+
+            index = lunr(function () {
+                console.log('test');
+
+                this.field('Rank');
+                this.field('Song');
+                this.field('Artist');
+                this.field('Year');
+                this.field('Lyrics');
+                this.field('Source');
+                this.ref('url');
+            });
         }
-    }
+
+        console.log(index);
+    });
 
 </script>
+
 
 <hr>
 
@@ -91,6 +118,5 @@
 <script src="../js/vendor/bootstrap.min.js"></script>
 
 <script src="../js/main.js"></script>
-
 </body>
 </html>
